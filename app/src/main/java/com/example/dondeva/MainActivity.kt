@@ -1,93 +1,106 @@
 package com.example.dondeva
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
+import androidx.camera.view.CameraController
+import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.dondeva.data.TfLiteGarbageClassifier
+import com.example.dondeva.domain.Classification
+import com.example.dondeva.presentation.CameraPreview
+import com.example.dondeva.presentation.GarbageImageAnalizer
 import com.example.dondeva.ui.theme.DondeVaTheme
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PhotoCamera
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (!hasCameraPermission()) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                0
+            )
+        }
         setContent {
-            DondeVaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(
-                        onScanClick = { /* Navegar a la cámara */ },
-                        onHistoryClick = { /* Navegar al historial */ }
-                    )
+            setContent {
+                DondeVaTheme {
+                    var classifications by remember {
+                        mutableStateOf(emptyList<Classification>())
+                    }
+                    val analyzer = remember {
+                        GarbageImageAnalizer(
+                            classifier = TfLiteGarbageClassifier(applicationContext),
+                            onResults = {
+                                classifications = it
+                            }
+                        )
+                    }
+                    val controller = remember {
+                        LifecycleCameraController(applicationContext).apply {
+                            setEnabledUseCases(
+                                CameraController.IMAGE_ANALYSIS
+                            )
+                            setImageAnalysisAnalyzer(
+                                ContextCompat.getMainExecutor(applicationContext),
+                                analyzer
+                            )
+                        }
+                    }
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        CameraPreview(controller, Modifier.fillMaxSize())
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.TopCenter),
+                        ) {
+                            classifications.forEach {
+                                Text(
+                                    text = it.name,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.primaryContainer)
+                                        .padding(8.dp),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 20.sp,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                    }
                 }
             }
         }
     }
-}
 
-@Composable
-fun MainScreen(onScanClick: () -> Unit, onHistoryClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = "¿Dónde Va?",
-            style = MaterialTheme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        IconButton(
-            onClick = onScanClick,
-            modifier = Modifier
-                .size(200.dp)
-                .background(Color(0xFF4CAF50), shape = CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Default.PhotoCamera,
-                contentDescription = "Escanear",
-                tint = Color.White,
-                modifier = Modifier.size(100.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(
-            onClick = onHistoryClick,
-            shape = RoundedCornerShape(16.dp)
-        ) {
-            Text("Historial")
-        }
-
-        Spacer(modifier = Modifier.height(64.dp))
-    }
+    private fun hasCameraPermission() = ContextCompat.checkSelfPermission(
+        this, Manifest.permission.CAMERA
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
