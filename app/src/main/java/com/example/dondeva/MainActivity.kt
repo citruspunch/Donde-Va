@@ -53,10 +53,10 @@ class MainActivity : ComponentActivity() {
                     val analyzer = remember {
                         GarbageImageAnalizer(
                             classifier = TfLiteGarbageClassifier(applicationContext),
-                            onResults = {
-                                classifications = it
-                            }
-                        )
+                        ) {
+                            classifications = it
+                            println(it)
+                        }
                     }
                     val controller = remember {
                         LifecycleCameraController(applicationContext).apply {
@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .align(Alignment.TopCenter),
+                                .align(Alignment.BottomCenter),
                         ) {
                             classifications.forEach {
                                 Text(

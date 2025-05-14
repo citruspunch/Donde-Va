@@ -1,6 +1,7 @@
 package com.example.dondeva.data
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.view.Surface
 import com.example.dondeva.domain.Classification
@@ -10,14 +11,19 @@ import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
+import java.io.BufferedReader
+import java.io.File
+import java.io.IOException
+import java.io.InputStreamReader
+
 
 class TfLiteGarbageClassifier(
     private val context: Context,
     private val treshold: Float = 0.5f,
-    private val maxResults: Int = 1
-): GarbageClassifier {
-
+    private val maxResults: Int = 1,
+) : GarbageClassifier {
     private var classifier: ImageClassifier? = null
+    private var labels = arrayListOf("cardboard", "glass", "metal", "paper", "plastic", "trash")
 
     private fun setupClassifier() {
         val baseOptions = BaseOptions.builder()
@@ -40,6 +46,13 @@ class TfLiteGarbageClassifier(
         }
     }
 
+    private fun getOrientationFromRotation(rotation: Int): ImageProcessingOptions.Orientation =
+        when (rotation) {
+            Surface.ROTATION_270 -> ImageProcessingOptions.Orientation.BOTTOM_RIGHT
+            Surface.ROTATION_90 -> ImageProcessingOptions.Orientation.TOP_LEFT
+            Surface.ROTATION_180 -> ImageProcessingOptions.Orientation.RIGHT_BOTTOM
+            else -> ImageProcessingOptions.Orientation.RIGHT_TOP
+        }
 
     override fun classify(bitmap: Bitmap, rotation: Int): List<Classification> {
         if (classifier == null) {
@@ -53,25 +66,16 @@ class TfLiteGarbageClassifier(
             .setOrientation(getOrientationFromRotation(rotation))
             .build()
 
-        val results =  classifier?.classify(tensorImage, imageProcessingOptions)
-        return results?.flatMap { classification ->
-            classification.categories.map { category ->
-                Classification(
-                    name = category.displayName,
-                    score = category.score
-                )
-            }
-        }?.distinctBy { it.name } ?: emptyList()
+        val result = classifier!!.classify(tensorImage, imageProcessingOptions)
+
+        return result
+            .flatMap { classification ->
+                classification.categories.map { category ->
+                    Classification(
+                        name = labels[category.index],
+                        score = category.score,
+                    )
+                }
+            }.distinctBy { it.name }
     }
-
-    private fun getOrientationFromRotation(rotation: Int): ImageProcessingOptions.Orientation {
-        return when (rotation) {
-            Surface.ROTATION_270 -> ImageProcessingOptions.Orientation.BOTTOM_RIGHT
-            Surface.ROTATION_90 -> ImageProcessingOptions.Orientation.TOP_LEFT
-            Surface.ROTATION_180 -> ImageProcessingOptions.Orientation.RIGHT_BOTTOM
-            else -> ImageProcessingOptions.Orientation.RIGHT_TOP
-        }
-    }
-
-
 }
