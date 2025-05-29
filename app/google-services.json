@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "805438005855",
+    "project_id": "donde-va-31e60",
+    "storage_bucket": "donde-va-31e60.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805438005855:android:3c61e6cadb250a6c0c71ea",
+        "android_client_info": {
+          "package_name": "com.example.dondeva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805438005855-gf4b3hfkcbsgr96jskruk5dc2r7cie7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dondeva",
+            "certificate_hash": "53efce8e632b42a96b02fdf1fba18444c32ec740"
+          }
+        },
+        {
+          "client_id": "805438005855-3h0j1vccu9qm901heb7tlqb3in67nvc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTECnA9rhlb-tSbtl3lN-fj1weZjrpEIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805438005855-3h0j1vccu9qm901heb7tlqb3in67nvc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
