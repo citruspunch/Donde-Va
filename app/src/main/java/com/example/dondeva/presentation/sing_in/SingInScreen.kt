@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
+import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.ui.theme.DondeVaTheme
 import com.example.dondeva.ui.theme.Purple40
 
@@ -41,8 +42,12 @@ import com.example.dondeva.ui.theme.Purple40
 fun SignInScreen(
     openAndPopUp: (String, String) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SignInViewModel = viewModel()
+    accountService: AccountService
 ) {
+    val viewModel: SignInViewModel = viewModel(
+        factory = SignInViewModelFactory(accountService)
+    )
+
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
 
@@ -104,7 +109,7 @@ fun SignInScreen(
             ),
             value = password.value,
             onValueChange = { viewModel.updatePassword(it) },
-            placeholder = { Text(stringResource(R.string.password },
+            placeholder = { Text(stringResource(R.string.password)) },
             leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Email") },
             visualTransformation = PasswordVisualTransformation()
         )
@@ -136,10 +141,10 @@ fun SignInScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AuthPreview() {
-    DondeVaTheme {
-        SignInScreen({ _, _ -> })
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun AuthPreview() {
+//    DondeVaTheme {
+//        SignInScreen({ _, _ -> })
+//    }
+//}

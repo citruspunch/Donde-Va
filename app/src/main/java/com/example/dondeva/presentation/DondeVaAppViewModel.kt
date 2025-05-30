@@ -8,6 +8,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 open class DondeVaAppViewModel: ViewModel() {
+    // Es una función para lanzar corrutinas y manejar errores
+    // para no tener que hacer un try catch
     fun launchCatching(block: suspend CoroutineScope.() -> Unit) =
         viewModelScope.launch(
             CoroutineExceptionHandler { _, throwable ->

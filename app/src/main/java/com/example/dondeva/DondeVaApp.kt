@@ -14,6 +14,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.dondeva.data.impl.AccountServiceImpl
+import com.example.dondeva.presentation.sing_in.SignInScreen
 import com.example.dondeva.ui.theme.DondeVaTheme
 
 @Composable
@@ -50,20 +52,23 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
         )*/
     }
 
+    // Por si hacemos vista de un solo articulo del historial
     composable(
         route = "$HISTORY_SCREEN$ITEM_ID_ARG",
         arguments = listOf(navArgument(ITEM_ID) { defaultValue = ITEM_DEFAULT_ID })
     ) {
         // TODO implement note screen
-        /*NoteScreen(
-            noteId = it.arguments?.getString(NOTE_ID) ?: NOTE_DEFAULT_ID,
-            popUpScreen = { appState.popUp() },
-            restartApp = { route -> appState.clearAndNavigate(route) }
+    }
+
+    composable(HISTORY_SCREEN) {
+        // TODO implement history screen
+        /*HistoryScreen(
+            openScreen = { route -> appState.navigate(route) }
         )*/
     }
 
     composable(SIGN_IN_SCREEN) {
-        SignInScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        SignInScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }, accountService = AccountServiceImpl())
     }
 
     composable(SIGN_UP_SCREEN) {

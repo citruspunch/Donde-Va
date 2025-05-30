@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.dondeva.presentation.AppRouteNavigator
 import com.example.dondeva.ui.theme.DondeVaTheme
 import com.google.firebase.BuildConfig
 import com.google.firebase.Firebase
@@ -19,6 +18,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        configureFirebaseServices()
         if (!hasCameraPermission()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -27,9 +27,7 @@ class MainActivity : ComponentActivity() {
             )
         }
         setContent {
-            DondeVaTheme {
-                AppRouteNavigator()
-            }
+            DondeVaApp()
         }
     }
 
