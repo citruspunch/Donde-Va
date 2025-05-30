@@ -1,11 +1,10 @@
 package com.example.dondeva.domain.service
 
+import com.example.dondeva.domain.entity.GarbageItem
 import kotlinx.coroutines.flow.Flow
 
 interface StorageService {
-    val notes: Flow<List<Note>>
-    suspend fun createNote(note: Note)
-    suspend fun readNote(noteId: String): Note?
-    suspend fun updateNote(note: Note)
-    suspend fun deleteNote(noteId: String)
+    suspend fun createGarbageItem(garbageItem: GarbageItem)
+    suspend fun deleteGarbageItem(itemId: String)
+    fun garbageItemsByUser(userId: String): Flow<List<GarbageItem>>
 }
