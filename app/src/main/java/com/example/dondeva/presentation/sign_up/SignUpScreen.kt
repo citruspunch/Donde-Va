@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation.sing_in
+package com.example.dondeva.presentation.sign_up
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -19,7 +19,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -36,18 +35,19 @@ import com.example.dondeva.R
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.ui.theme.Purple40
 
+
 @Composable
-fun SignInScreen(
+fun SignUpScreen(
     openAndPopUp: (String, String) -> Unit,
     modifier: Modifier = Modifier,
     accountService: AccountService
 ) {
-    val viewModel: SignInViewModel = viewModel(
-        factory = SignInViewModelFactory(accountService)
-    )
+    val viewModel: SignUpViewModel = viewModel(
+        factory = SignUpViewModelFactory(accountService))
 
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
+    val confirmPassword = viewModel.confirmPassword.collectAsState()
 
     Column(
         modifier = modifier
@@ -59,7 +59,7 @@ fun SignInScreen(
     ) {
         Image(
             painter = painterResource(id = R.mipmap.ic_launcher_foreground),
-            contentDescription = "Logo App Image",
+            contentDescription = "Auth image",
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp, 4.dp)
@@ -86,7 +86,7 @@ fun SignInScreen(
             ),
             value = email.value,
             onValueChange = { viewModel.updateEmail(it) },
-            placeholder = { Text(text = stringResource(R.string.email)) },
+            placeholder = { Text(stringResource(R.string.email)) },
             leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
         )
 
@@ -112,29 +112,43 @@ fun SignInScreen(
             visualTransformation = PasswordVisualTransformation()
         )
 
+        OutlinedTextField(
+            singleLine = true,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp, 4.dp)
+                .border(
+                    BorderStroke(width = 2.dp, color = Purple40),
+                    shape = RoundedCornerShape(50)
+                ),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+            value = confirmPassword.value,
+            onValueChange = { viewModel.updateConfirmPassword(it) },
+            placeholder = { Text(stringResource(R.string.confirm_password)) },
+            leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Email") },
+            visualTransformation = PasswordVisualTransformation()
+        )
+
         Spacer(modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp))
 
         Button(
-            onClick = { viewModel.onSignInClick(openAndPopUp) },
+            onClick = { viewModel.onSignUpClick(openAndPopUp) },
             modifier = modifier
                 .fillMaxWidth()
                 .padding(16.dp, 0.dp)
         ) {
             Text(
-                text = stringResource(R.string.sign_in),
+                text = stringResource(R.string.sign_up),
                 fontSize = 16.sp,
                 modifier = modifier.padding(0.dp, 6.dp)
             )
-        }
-
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp))
-
-        TextButton(onClick = { viewModel.onSignUpClick(openAndPopUp) }) {
-            Text(text = stringResource(R.string.sign_up_description), fontSize = 16.sp)
         }
     }
 }
