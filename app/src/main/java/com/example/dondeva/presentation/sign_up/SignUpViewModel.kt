@@ -43,7 +43,10 @@ class SignUpViewModelFactory(
     private val accountService: AccountService
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return SignUpViewModel(accountService) as T
+        if (modelClass.isAssignableFrom(SignUpViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return SignUpViewModel(accountService) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

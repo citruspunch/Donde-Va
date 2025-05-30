@@ -15,7 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dondeva.data.impl.AccountServiceImpl
+import com.example.dondeva.presentation.sign_up.SignUpScreen
 import com.example.dondeva.presentation.sing_in.SignInScreen
+import com.example.dondeva.presentation.splash.SplashScreen
 import com.example.dondeva.ui.theme.DondeVaTheme
 
 @Composable
@@ -68,14 +70,23 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
     }
 
     composable(SIGN_IN_SCREEN) {
-        SignInScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) }, accountService = AccountServiceImpl())
+        SignInScreen(
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            accountService = AccountServiceImpl()
+        )
     }
 
     composable(SIGN_UP_SCREEN) {
-        SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        SignUpScreen(
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            accountService = AccountServiceImpl()
+        )
     }
 
     composable(SPLASH_SCREEN) {
-        SplashScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
+        SplashScreen(
+            openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            accountService = AccountServiceImpl()
+        )
     }
 }
