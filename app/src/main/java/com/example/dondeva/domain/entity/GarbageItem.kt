@@ -10,3 +10,7 @@ data class GarbageItem(
     val userId: String = "",
     val scanningTime: Timestamp = Timestamp.now() // Para ordenar historial
 )
+
+fun GarbageItem.getShortLabel(maxLength: Int = 30): String {
+    return if (label.length > maxLength) label.substring(0, maxLength) + "..." else label
+}

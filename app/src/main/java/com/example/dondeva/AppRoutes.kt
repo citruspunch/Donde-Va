@@ -3,6 +3,7 @@ package com.example.dondeva
 // Pantallas
 const val SCAN_SCREEN = "ScanScreen"
 const val RESULT_SCREEN = "ResultScreen"
+const val ITEM_DETAIL_SCREEN = "ItemDetailScreen"
 const val HISTORY_SCREEN = "HistoryScreen"
 const val SIGN_IN_SCREEN = "SignInScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
