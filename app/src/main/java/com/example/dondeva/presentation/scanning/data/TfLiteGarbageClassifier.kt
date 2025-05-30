@@ -1,20 +1,15 @@
-package com.example.dondeva.data
+package com.example.dondeva.presentation.scanning.data
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.graphics.Bitmap
 import android.view.Surface
-import com.example.dondeva.domain.Classification
-import com.example.dondeva.domain.GarbageClassifier
+import com.example.dondeva.presentation.scanning.domain.Classification
+import com.example.dondeva.presentation.scanning.domain.GarbageClassifier
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.core.vision.ImageProcessingOptions
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier
-import java.io.BufferedReader
-import java.io.File
-import java.io.IOException
-import java.io.InputStreamReader
 
 
 class TfLiteGarbageClassifier(

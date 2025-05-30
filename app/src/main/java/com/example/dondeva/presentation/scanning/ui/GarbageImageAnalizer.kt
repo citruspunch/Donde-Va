@@ -1,9 +1,9 @@
-package com.example.dondeva.presentation
+package com.example.dondeva.presentation.scanning.ui
 
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import com.example.dondeva.domain.Classification
-import com.example.dondeva.domain.GarbageClassifier
+import com.example.dondeva.presentation.scanning.domain.Classification
+import com.example.dondeva.presentation.scanning.domain.GarbageClassifier
 
 class GarbageImageAnalizer(
     private val classifier: GarbageClassifier,

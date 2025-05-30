@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation
+package com.example.dondeva.presentation.scanning.ui
 
 import android.util.Log
 import androidx.camera.core.ImageCapture
@@ -37,8 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.example.dondeva.data.TfLiteGarbageClassifier
-import com.example.dondeva.domain.Classification
+import com.example.dondeva.presentation.scanning.data.TfLiteGarbageClassifier
+import com.example.dondeva.presentation.scanning.domain.Classification
 import com.example.dondeva.ui.theme.aqua
 
 @Composable
