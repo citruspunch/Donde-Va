@@ -1,7 +1,6 @@
 package com.example.dondeva
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -15,6 +14,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.dondeva.data.impl.AccountServiceImpl
+import com.example.dondeva.data.impl.StorageServiceImpl
+import com.example.dondeva.presentation.history.HistoryScreen
 import com.example.dondeva.presentation.sign_up.SignUpScreen
 import com.example.dondeva.presentation.sing_in.SignInScreen
 import com.example.dondeva.presentation.splash.SplashScreen
@@ -63,10 +64,15 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
     }
 
     composable(HISTORY_SCREEN) {
-        // TODO implement history screen
-        /*HistoryScreen(
-            openScreen = { route -> appState.navigate(route) }
-        )*/
+        val accountService = AccountServiceImpl()
+        val storageService = StorageServiceImpl(accountService)
+
+        HistoryScreen(
+            restartApp = { route -> appState.clearAndNavigate(route) },
+            openScreen = { route -> appState.navigate(route) },
+            accountService = accountService,
+            storageService = storageService
+        )
     }
 
     composable(SIGN_IN_SCREEN) {
