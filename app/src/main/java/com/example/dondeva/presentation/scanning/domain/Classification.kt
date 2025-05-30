@@ -1,4 +1,4 @@
-package com.example.dondeva.domain
+package com.example.dondeva.presentation.scanning.domain
 
 data class Classification(
     val name: String,
