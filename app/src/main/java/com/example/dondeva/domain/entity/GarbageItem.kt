@@ -8,5 +8,5 @@ data class GarbageItem(
     val label: String = "",          // Resultado del modelo
     val category: String = "",       // reciclable, organico o inorganico
     val userId: String = "",
-    val timestamp: Timestamp = Timestamp.now() // Para ordenar historial
+    val scanningTime: Timestamp = Timestamp.now() // Para ordenar historial
 )
