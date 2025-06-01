@@ -42,8 +42,6 @@ import com.example.dondeva.domain.entity.GarbageItem
 import com.example.dondeva.domain.entity.getShortLabel
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.domain.service.StorageService
-import com.example.dondeva.ui.theme.Purple40
-import com.example.dondeva.ui.theme.PurpleGrey40
 import androidx.compose.foundation.lazy.items
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +65,6 @@ fun HistoryScreen(
             FloatingActionButton(
                 onClick = { viewModel.onAddClick(openScreen) },
                 modifier = modifier.padding(16.dp),
-                containerColor = Purple40,
                 shape = RoundedCornerShape(16.dp)
             ) {
                 Icon(Icons.Filled.Add, "Add")
@@ -91,7 +88,6 @@ fun HistoryScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.person_remove),
                             contentDescription = "Borrar cuenta",
-                            tint = PurpleGrey40
                         )
                     }
                 }

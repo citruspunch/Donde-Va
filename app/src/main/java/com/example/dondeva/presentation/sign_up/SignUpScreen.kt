@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -33,7 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
 import com.example.dondeva.domain.service.AccountService
-import com.example.dondeva.ui.theme.Purple40
 
 
 @Composable
@@ -75,7 +75,7 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .padding(16.dp, 4.dp)
                 .border(
-                    BorderStroke(width = 2.dp, color = Purple40),
+                    BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.outline),
                     shape = RoundedCornerShape(50)
                 ),
             colors = TextFieldDefaults.colors(
@@ -96,7 +96,7 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .padding(16.dp, 4.dp)
                 .border(
-                    BorderStroke(width = 2.dp, color = Purple40),
+                    BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.outline),
                     shape = RoundedCornerShape(50)
                 ),
             colors = TextFieldDefaults.colors(
@@ -118,7 +118,7 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .padding(16.dp, 4.dp)
                 .border(
-                    BorderStroke(width = 2.dp, color = Purple40),
+                    BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.outline),
                     shape = RoundedCornerShape(50)
                 ),
             colors = TextFieldDefaults.colors(

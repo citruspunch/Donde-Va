@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.dondeva.presentation.scanning.data.TfLiteGarbageClassifier
 import com.example.dondeva.presentation.scanning.domain.Classification
-import com.example.dondeva.ui.theme.aqua
 
 @Composable
 fun ScanningPage(onNavigateToLoginPage: () -> Unit){
@@ -120,7 +119,7 @@ fun HeaderScanningPage(onNavigateToLoginPage: () -> Unit){
     ){
         Text(
             text = "¿Dónde va?",
-            color = aqua,
+            color = Color.Blue,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f)

@@ -1,15 +1,13 @@
 package com.example.dondeva
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -19,22 +17,20 @@ import com.example.dondeva.presentation.history.HistoryScreen
 import com.example.dondeva.presentation.sign_up.SignUpScreen
 import com.example.dondeva.presentation.sing_in.SignInScreen
 import com.example.dondeva.presentation.splash.SplashScreen
-import com.example.dondeva.ui.theme.DondeVaTheme
+import com.example.dondeva.ui.theme.AppTheme
 
 @Composable
 fun DondeVaApp() {
-    DondeVaTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            val appState = rememberAppState()
+    AppTheme {
+        val appState = rememberAppState()
 
-            Scaffold { innerPaddingModifier ->
-                NavHost(
-                    navController = appState.navController,
-                    startDestination = SPLASH_SCREEN,
-                    modifier = Modifier.padding(innerPaddingModifier)
-                ) {
-                    appGraph(appState)
-                }
+        Scaffold { innerPaddingModifier ->
+            NavHost(
+                navController = appState.navController,
+                startDestination = SPLASH_SCREEN,
+                modifier = Modifier.padding(innerPaddingModifier)
+            ) {
+                appGraph(appState)
             }
         }
     }
