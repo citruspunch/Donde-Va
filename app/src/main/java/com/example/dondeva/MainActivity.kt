@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.dondeva.ui.theme.DondeVaTheme
+import com.example.dondeva.ui.theme.AppTheme
 import com.google.firebase.BuildConfig
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth

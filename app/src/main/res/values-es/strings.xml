@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="authenticate">Autenticarse</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="sign_up">Registrarse</string>
+    <string name="sign_up_description">¿No tienes una cuenta? ¡Haz clic aquí para registrarte!</string>
+    <string name="account_already_created">¿Ya tienes una cuenta? Inicia sesión aquí</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="sign_out_title">¿Cerrar sesión?</string>
+    <string name="sign_out_description">Tendrás que iniciar sesión de nuevo para ver tus notas.</string>
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="delete_account_title">¿Eliminar cuenta?</string>
+    <string name="delete_account_description">Perderás todas tus notas y tu cuenta será eliminada. Esta acción es irreversible.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="analyze">Analizar</string>
+    <string name="cardboard">Cartón</string>
+    <string name="glass">Vidrio</string>
+    <string name="metal">Metal</string>
+    <string name="paper">Papel</string>
+    <string name="plastic">Plástico</string>
+    <string name="trash">Basura</string>
+    <string name="see_details">Ver detalles</string>
+    <string name="dismiss">Hecho</string>
+    <string name="analyze_image">Analizar imagen</string>
+    <string name="analyzing">Analizando</string>
+    <string name="signing_in">iniciando sesión</string>
+    <string name="signing_up">Registrando</string>
+    <string name="fill_all_fields">Llena todos los campos</string>
+    <string name="incorrect_credentials">Credenciales incorrectas</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="account_already_exists">La cuenta ya existe</string>
+    <string name="password_must_be_at_least_six_characters_long">La contraseña debe tener al menos 6 caracteres</string>
+</resources>
