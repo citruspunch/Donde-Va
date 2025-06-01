@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.view.Surface
 import com.example.dondeva.presentation.scanning.domain.Classification
 import com.example.dondeva.presentation.scanning.domain.GarbageClassifier
+import com.example.dondeva.presentation.scanning.domain.GarbageType
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.task.core.BaseOptions
@@ -18,23 +19,15 @@ class TfLiteGarbageClassifier(
     private val maxResults: Int = 1,
 ) : GarbageClassifier {
     private var classifier: ImageClassifier? = null
-    private var labels = arrayListOf("cardboard", "glass", "metal", "paper", "plastic", "trash")
 
     private fun setupClassifier() {
-        val baseOptions = BaseOptions.builder()
-            .setNumThreads(2)
-            .build()
-        val options = ImageClassifier.ImageClassifierOptions.builder()
-            .setBaseOptions(baseOptions)
-            .setMaxResults(maxResults)
-            .setScoreThreshold(treshold)
-            .build()
+        val baseOptions = BaseOptions.builder().setNumThreads(2).build()
+        val options = ImageClassifier.ImageClassifierOptions.builder().setBaseOptions(baseOptions)
+            .setMaxResults(maxResults).setScoreThreshold(treshold).build()
 
         try {
             classifier = ImageClassifier.createFromFileAndOptions(
-                context,
-                "garbage_classifier.tflite",
-                options
+                context, "garbage_classifier.tflite", options
             )
         } catch (e: IllegalStateException) {
             e.printStackTrace()
@@ -57,20 +50,19 @@ class TfLiteGarbageClassifier(
         val imageProcessor = ImageProcessor.Builder().build()
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(bitmap))
 
-        val imageProcessingOptions = ImageProcessingOptions.builder()
-            .setOrientation(getOrientationFromRotation(rotation))
-            .build()
+        val imageProcessingOptions =
+            ImageProcessingOptions.builder().setOrientation(getOrientationFromRotation(rotation))
+                .build()
 
         val result = classifier!!.classify(tensorImage, imageProcessingOptions)
 
-        return result
-            .flatMap { classification ->
+        return result.flatMap { classification ->
                 classification.categories.map { category ->
                     Classification(
-                        name = labels[category.index],
+                        type = GarbageType.entries[category.index],
                         score = category.score,
                     )
                 }
-            }.distinctBy { it.name }
+            }.distinctBy { it.type }
     }
 }

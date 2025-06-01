@@ -24,7 +24,7 @@ val displayFontFamily = FontFamily(
     Font(
         R.font.manropevariable,
         variationSettings = FontVariation.Settings(
-            FontVariation.weight(500),
+            FontVariation.weight(600),
             FontVariation.width(24f),
         ),
     ),

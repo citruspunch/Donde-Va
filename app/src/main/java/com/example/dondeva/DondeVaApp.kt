@@ -1,10 +1,7 @@
 package com.example.dondeva
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.data.impl.StorageServiceImpl
 import com.example.dondeva.presentation.history.HistoryScreen
+import com.example.dondeva.presentation.scanning.ui.ScanningPage
 import com.example.dondeva.presentation.sign_up.SignUpScreen
 import com.example.dondeva.presentation.sing_in.SignInScreen
 import com.example.dondeva.presentation.splash.SplashScreen
@@ -24,14 +22,11 @@ fun DondeVaApp() {
     AppTheme {
         val appState = rememberAppState()
 
-        Scaffold { innerPaddingModifier ->
-            NavHost(
-                navController = appState.navController,
-                startDestination = SPLASH_SCREEN,
-                modifier = Modifier.padding(innerPaddingModifier)
-            ) {
-                appGraph(appState)
-            }
+        NavHost(
+            navController = appState.navController,
+            startDestination = SPLASH_SCREEN,
+        ) {
+            appGraph(appState)
         }
     }
 }
@@ -44,11 +39,7 @@ fun rememberAppState(navController: NavHostController = rememberNavController())
 
 fun NavGraphBuilder.appGraph(appState: AppState) {
     composable(SCAN_SCREEN) {
-        // TODO implement scanning screen
-        /*NotesListScreen(
-            restartApp = { route -> appState.clearAndNavigate(route) },
-            openScreen = { route -> appState.navigate(route) }
-        )*/
+        ScanningPage { }
     }
 
     // Por si hacemos vista de un solo articulo del historial
@@ -81,6 +72,12 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
     composable(SIGN_UP_SCREEN) {
         SignUpScreen(
             openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
+            onSignInRequired = {
+                appState.navigateAndPopUp(
+                    route = SIGN_IN_SCREEN,
+                    popUp = SIGN_UP_SCREEN,
+                )
+            },
             accountService = AccountServiceImpl()
         )
     }
