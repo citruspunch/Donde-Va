@@ -23,7 +23,7 @@ fun SplashScreen(
     accountService: AccountService
 ) {
     val viewModel: SplashViewModel = viewModel(
-        factory = SplashViewModelFactory(accountService)
+        factory = SplashViewModelFactory(accountService),
     )
     Column(
         modifier =
@@ -33,7 +33,7 @@ fun SplashScreen(
                 .background(color = MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
     }

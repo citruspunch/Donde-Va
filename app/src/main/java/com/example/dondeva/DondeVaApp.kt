@@ -2,6 +2,7 @@ package com.example.dondeva
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +17,7 @@ import com.example.dondeva.presentation.sign_up.SignUpScreen
 import com.example.dondeva.presentation.sing_in.SignInScreen
 import com.example.dondeva.presentation.splash.SplashScreen
 import com.example.dondeva.ui.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun DondeVaApp() {
@@ -39,13 +41,22 @@ fun rememberAppState(navController: NavHostController = rememberNavController())
 
 fun NavGraphBuilder.appGraph(appState: AppState) {
     composable(SCAN_SCREEN) {
-        ScanningPage { }
+        val scope = rememberCoroutineScope()
+
+        ScanningPage(
+            onNavigateToLoginPage = {
+                scope.launch {
+                    AccountServiceImpl().signOut()
+                    appState.navigateAndPopUp(route = SIGN_IN_SCREEN, popUp = SCAN_SCREEN)
+                }
+            },
+        )
     }
 
     // Por si hacemos vista de un solo articulo del historial
     composable(
         route = "$HISTORY_SCREEN$ITEM_ID_ARG",
-        arguments = listOf(navArgument(ITEM_ID) { defaultValue = ITEM_DEFAULT_ID })
+        arguments = listOf(navArgument(ITEM_ID) { defaultValue = ITEM_DEFAULT_ID }),
     ) {
         // TODO implement note screen
     }
@@ -85,7 +96,7 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
     composable(SPLASH_SCREEN) {
         SplashScreen(
             openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
-            accountService = AccountServiceImpl()
+            accountService = AccountServiceImpl(),
         )
     }
 }

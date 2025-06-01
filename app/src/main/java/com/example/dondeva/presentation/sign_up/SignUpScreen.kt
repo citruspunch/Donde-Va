@@ -22,6 +22,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
@@ -31,12 +33,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,6 +52,7 @@ import com.example.dondeva.R
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.ui.theme.AppTheme
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -57,23 +62,39 @@ fun SignUpScreen(
     modifier: Modifier = Modifier,
     accountService: AccountService,
 ) {
+    val context = LocalContext.current
     val viewModel: SignUpViewModel = viewModel(
         factory = SignUpViewModelFactory(accountService),
     )
+    val errorMessages = viewModel.errorEvents
 
     val email = viewModel.email.collectAsState()
     val password = viewModel.password.collectAsState()
     val confirmPassword = viewModel.confirmPassword.collectAsState()
+    val isSigningUp = viewModel.isSigningUp.collectAsState()
 
     var showPassword by remember { mutableStateOf(false) }
     var showConfirmationPassword by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+
+        errorMessages.collect { message ->
+            scope.launch {
+                snackbarHostState.showSnackbar(message = context.resources.getString(message))
+            }
+        }
     }
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState, modifier = Modifier.imePadding())
+        },
+    ) { innerPadding ->
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -196,17 +217,20 @@ fun SignUpScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { viewModel.onSignUpClick(openAndPopUp) },
+                onClick = {
+                    if (isSigningUp.value) Unit else viewModel.onSignUpClick(openAndPopUp)
+                },
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
             ) {
-                Text(text = stringResource(R.string.sign_up))
+                Text(
+                    text = if (isSigningUp.value) "${stringResource(R.string.signing_up)}..."
+                    else stringResource(R.string.sign_up),
+                )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            TextButton(
-                onClick = onSignInRequired,
-            ) {
+            TextButton(onClick = onSignInRequired) {
                 Text(text = stringResource(R.string.account_already_created))
             }
         }

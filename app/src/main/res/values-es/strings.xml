@@ -26,4 +26,11 @@
     <string name="dismiss">Hecho</string>
     <string name="analyze_image">Analizar imagen</string>
     <string name="analyzing">Analizando</string>
+    <string name="signing_in">iniciando sesión</string>
+    <string name="signing_up">Registrando</string>
+    <string name="fill_all_fields">Llena todos los campos</string>
+    <string name="incorrect_credentials">Credenciales incorrectas</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="account_already_exists">La cuenta ya existe</string>
+    <string name="password_must_be_at_least_six_characters_long">La contraseña debe tener al menos 6 caracteres</string>
 </resources>

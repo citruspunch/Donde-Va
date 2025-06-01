@@ -26,4 +26,11 @@
     <string name="dismiss">Dismiss</string>
     <string name="analyze_image">Analyze image</string>
     <string name="analyzing">Analyzing</string>
+    <string name="signing_in">Signing in</string>
+    <string name="signing_up">Signing up</string>
+    <string name="fill_all_fields">Fill all fields</string>
+    <string name="incorrect_credentials">Incorrect credentials</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="account_already_exists">Account already exists</string>
+    <string name="password_must_be_at_least_six_characters_long">Password must be at least 6 characters long</string>
 </resources>

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 
 class HistoryViewModel(
     private val accountService: AccountService,
-    storageService: StorageService
+    storageService: StorageService,
 ) : DondeVaAppViewModel() {
     val garbageItems: Flow<List<GarbageItem>> = storageService.garbageItemsByCurrentUser
 
