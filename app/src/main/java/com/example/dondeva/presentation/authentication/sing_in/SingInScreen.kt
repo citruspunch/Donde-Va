@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation.sing_in
+package com.example.dondeva.presentation.authentication.sing_in
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -6,11 +6,13 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
@@ -47,10 +49,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.domain.service.AccountService
+import com.example.dondeva.presentation.authentication.AuthenticationButton
 import com.example.dondeva.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -90,10 +94,11 @@ fun SignInScreen(
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.imePadding())
         },
     ) { innerPadding ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(innerPadding)
                 .imePadding(),
             verticalArrangement = Arrangement.Center,
@@ -186,9 +191,17 @@ fun SignInScreen(
                     text = if (isSigningIn.value) "${stringResource(R.string.signing_in)}..."
                     else stringResource(R.string.sign_in),
                     modifier = modifier.padding(vertical = 6.dp),
+                    fontSize = 15.sp,
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            Text(text = stringResource(R.string.or))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AuthenticationButton(R.string.sign_in_with_google) {
+                viewModel.handleGoogleSignInWithBottomSheet(context, openAndPopUp)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             TextButton(
                 onClick = {
                     viewModel.onSignUpClick(openAndPopUp)
