@@ -4,6 +4,7 @@ import com.example.dondeva.domain.entity.User
 import com.example.dondeva.domain.service.AccountService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -38,6 +39,16 @@ class AccountServiceImpl : AccountService {
 
     override suspend fun signOut() {
         Firebase.auth.signOut()
+    }
+
+    override suspend fun signInWithGoogle(idToken: String) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        Firebase.auth.signInWithCredential(firebaseCredential).await()
+    }
+
+    override suspend fun signUpWithGoogle(idToken: String) {
+        val firebaseCredential = GoogleAuthProvider.getCredential(idToken, null)
+        Firebase.auth.signInWithCredential(firebaseCredential).await()
     }
 
     override suspend fun deleteAccount() {

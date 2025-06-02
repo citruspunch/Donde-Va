@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation.sign_up
+package com.example.dondeva.presentation.authentication.sign_up
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
@@ -47,13 +50,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.ui.theme.AppTheme
 import kotlinx.coroutines.launch
-
+import com.example.dondeva.presentation.authentication.AuthenticationButton
 
 @Composable
 fun SignUpScreen(
@@ -82,7 +86,6 @@ fun SignUpScreen(
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
-
         errorMessages.collect { message ->
             scope.launch {
                 snackbarHostState.showSnackbar(message = context.resources.getString(message))
@@ -95,10 +98,13 @@ fun SignUpScreen(
             SnackbarHost(hostState = snackbarHostState, modifier = Modifier.imePadding())
         },
     ) { innerPadding ->
+
+        val scrollState = rememberScrollState()
+
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(innerPadding)
                 .imePadding(),
             verticalArrangement = Arrangement.Center,
@@ -227,9 +233,18 @@ fun SignUpScreen(
                 Text(
                     text = if (isSigningUp.value) "${stringResource(R.string.signing_up)}..."
                     else stringResource(R.string.sign_up),
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(0.dp, 6.dp)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            Text(text = stringResource(R.string.or))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AuthenticationButton(R.string.sign_up_with_google) {
+                viewModel.handleGoogleSignUpWithBottomSheet(context, openAndPopUp)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             TextButton(onClick = onSignInRequired) {
                 Text(text = stringResource(R.string.account_already_created))
             }

@@ -13,8 +13,8 @@ import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.data.impl.StorageServiceImpl
 import com.example.dondeva.presentation.history.HistoryScreen
 import com.example.dondeva.presentation.scanning.ui.ScanningPage
-import com.example.dondeva.presentation.sign_up.SignUpScreen
-import com.example.dondeva.presentation.sing_in.SignInScreen
+import com.example.dondeva.presentation.authentication.sign_up.SignUpScreen
+import com.example.dondeva.presentation.authentication.sing_in.SignInScreen
 import com.example.dondeva.presentation.splash.SplashScreen
 import com.example.dondeva.ui.theme.AppTheme
 import kotlinx.coroutines.launch

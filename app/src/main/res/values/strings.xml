@@ -33,4 +33,11 @@
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="account_already_exists">Account already exists</string>
     <string name="password_must_be_at_least_six_characters_long">Password must be at least 6 characters long</string>
+    <string name="google_logo_description">Google logo</string>
+    <string name="no_accounts_error">No Google accounts found on this device</string>
+    <string name="unexpected_credential">Unexpected type of credential</string>
+    <string name="get_credential_error">Error getting credential</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+    <string name="or">or</string>
 </resources>
