@@ -77,45 +77,8 @@ class SignUpViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val signInWithGoogleOption = GetSignInWithGoogleOption
-                    .Builder(serverClientId = context.getString(R.string.default_web_client_id))
-                    .build()
-
-                val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(signInWithGoogleOption)
-                    .build()
-
-                val result = CredentialManager.create(context).getCredential(
-                    request = request,
-                    context = context
-                )
-
-                val googleIdTokenCredential =
-                    GoogleIdTokenCredential.createFrom(result.credential.data)
-                accountService.signUpWithGoogle(googleIdTokenCredential.idToken)
-                openAndPopUp(SCAN_SCREEN, SIGN_UP_SCREEN)
-
-            } catch (e: NoCredentialException) {
-                // Retry without filtering
-                handleGoogleSignUpWithBottomSheetWithoutFilter(context, openAndPopUp)
-            } catch (e: GetCredentialException) {
-                Log.d(ERROR_TAG, e.message.orEmpty())
-                showError(R.string.get_credential_error)
-            } catch (e: Exception) {
-                Log.d(ERROR_TAG, e.message.orEmpty())
-                showError(R.string.unexpected_credential)
-            }
-        }
-    }
-
-    private fun handleGoogleSignUpWithBottomSheetWithoutFilter(
-        context: Context,
-        openAndPopUp: (String, String) -> Unit
-    ) {
-        viewModelScope.launch {
-            try {
                 val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(false)
+                    .setFilterByAuthorizedAccounts(true)
                     .setServerClientId(context.getString(R.string.default_web_client_id))
                     .build()
 
@@ -130,11 +93,51 @@ class SignUpViewModel(
 
                 val googleIdTokenCredential =
                     GoogleIdTokenCredential.createFrom(result.credential.data)
+
+                accountService.signInWithGoogle(googleIdTokenCredential.idToken)
+                openAndPopUp(SCAN_SCREEN, SIGN_UP_SCREEN)
+
+            } catch (e: NoCredentialException) {
+                // Retry without filtering
+                retryGoogleSignUpWithoutFilter(context, openAndPopUp)
+            } catch (e: GetCredentialException) {
+                Log.d(ERROR_TAG, e.message.orEmpty())
+                showError(R.string.get_credential_error)
+            } catch (e: Exception) {
+                Log.d(ERROR_TAG, e.message.orEmpty())
+                showError(R.string.unexpected_credential)
+            }
+        }
+    }
+
+    private fun retryGoogleSignUpWithoutFilter(
+        context: Context,
+        openAndPopUp: (String, String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val fallbackOption = GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(context.getString(R.string.default_web_client_id))
+                    .build()
+
+                val request = GetCredentialRequest.Builder()
+                    .addCredentialOption(fallbackOption)
+                    .build()
+
+                val result = CredentialManager.create(context).getCredential(
+                    request = request,
+                    context = context
+                )
+
+                val googleIdTokenCredential =
+                    GoogleIdTokenCredential.createFrom(result.credential.data)
+
                 accountService.signUpWithGoogle(googleIdTokenCredential.idToken)
                 openAndPopUp(SCAN_SCREEN, SIGN_UP_SCREEN)
 
             } catch (e: NoCredentialException) {
-                Log.e(ERROR_TAG, e.message.toString())
+                Log.e(ERROR_TAG, "Google Sign-Up fallback failed: ${e.message}")
                 showError(R.string.no_accounts_error)
             }
         }

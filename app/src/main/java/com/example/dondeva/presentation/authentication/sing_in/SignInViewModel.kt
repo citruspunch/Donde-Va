@@ -64,12 +64,13 @@ class SignInViewModel(
     ) {
         viewModelScope.launch {
             try {
-                val signInWithGoogleOption = GetSignInWithGoogleOption
-                    .Builder(serverClientId = context.getString(R.string.default_web_client_id))
+                val googleIdOption = GetGoogleIdOption.Builder()
+                    .setFilterByAuthorizedAccounts(true)
+                    .setServerClientId(context.getString(R.string.default_web_client_id))
                     .build()
 
                 val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(signInWithGoogleOption)
+                    .addCredentialOption(googleIdOption)
                     .build()
 
                 val result = CredentialManager.create(context).getCredential(
@@ -77,25 +78,26 @@ class SignInViewModel(
                     context = context
                 )
 
-                val googleIdTokenCredential =
+                val googleCredential =
                     GoogleIdTokenCredential.createFrom(result.credential.data)
-                accountService.signInWithGoogle(googleIdTokenCredential.idToken)
-                openAndPopUp(SCAN_SCREEN, SIGN_UP_SCREEN)
+
+                accountService.signInWithGoogle(googleCredential.idToken)
+                openAndPopUp(SCAN_SCREEN, SIGN_IN_SCREEN)
 
             } catch (e: NoCredentialException) {
-                // Retry without filtering
-                handleGoogleSignInWithBottomSheetWithoutFilter(context, openAndPopUp)
+                // Retry without filter
+                retryGoogleSignInWithoutFilter(context, openAndPopUp)
             } catch (e: GetCredentialException) {
-                Log.d(ERROR_TAG, e.message.orEmpty())
+                Log.e(ERROR_TAG, "GetCredentialException: ${e.message}")
                 showError(R.string.get_credential_error)
             } catch (e: Exception) {
-                Log.d(ERROR_TAG, e.message.orEmpty())
+                Log.e(ERROR_TAG, "Google Sign-In Failed: ${e.message}")
                 showError(R.string.unexpected_credential)
             }
         }
     }
 
-    private fun handleGoogleSignInWithBottomSheetWithoutFilter(
+    private fun retryGoogleSignInWithoutFilter(
         context: Context,
         openAndPopUp: (String, String) -> Unit
     ) {
@@ -115,14 +117,15 @@ class SignInViewModel(
                     context = context
                 )
 
-                val googleIdTokenCredential =
+                val googleCredential =
                     GoogleIdTokenCredential.createFrom(result.credential.data)
-                accountService.signUpWithGoogle(googleIdTokenCredential.idToken)
-                openAndPopUp(SCAN_SCREEN, SIGN_UP_SCREEN)
 
-            } catch (e: NoCredentialException) {
-                Log.e(ERROR_TAG, e.message.toString())
-                showError(R.string.no_accounts_error)
+                accountService.signInWithGoogle(googleCredential.idToken)
+                openAndPopUp(SCAN_SCREEN, SIGN_IN_SCREEN)
+
+            } catch (e: Exception) {
+                Log.e(ERROR_TAG, "Final retry failed: ${e.message}")
+                showError(R.string.unexpected_credential)
             }
         }
     }
