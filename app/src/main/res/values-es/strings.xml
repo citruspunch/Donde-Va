@@ -33,4 +33,7 @@
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="account_already_exists">La cuenta ya existe</string>
     <string name="password_must_be_at_least_six_characters_long">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="history">Historial</string>
+    <string name="scanned">Escaneado</string>
+    <string name="analyze_another_object">Analizar otro objeto</string>
 </resources>

@@ -5,6 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -40,7 +41,7 @@ fun rememberAppState(navController: NavHostController = rememberNavController())
     }
 
 fun NavGraphBuilder.appGraph(appState: AppState) {
-    composable(SCAN_SCREEN) {
+    composable(route = SCAN_SCREEN) {
         val scope = rememberCoroutineScope()
 
         ScanningPage(
@@ -50,18 +51,11 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
                     appState.navigateAndPopUp(route = SIGN_IN_SCREEN, popUp = SCAN_SCREEN)
                 }
             },
+            onNavigateToHistoryView = { appState.navigate(route = HISTORY_SCREEN) },
         )
     }
 
-    // Por si hacemos vista de un solo articulo del historial
-    composable(
-        route = "$HISTORY_SCREEN$ITEM_ID_ARG",
-        arguments = listOf(navArgument(ITEM_ID) { defaultValue = ITEM_DEFAULT_ID }),
-    ) {
-        // TODO implement note screen
-    }
-
-    composable(HISTORY_SCREEN) {
+    composable(route = HISTORY_SCREEN) {
         val accountService = AccountServiceImpl()
         val storageService = StorageServiceImpl(accountService)
 
@@ -69,14 +63,31 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
             restartApp = { route -> appState.clearAndNavigate(route) },
             openScreen = { route -> appState.navigate(route) },
             accountService = accountService,
-            storageService = storageService
+            storageService = storageService,
         )
     }
+
+    // Por si hacemos vista de un solo articulo del historial
+    composable(
+        route = "$RESULT_SCREEN?$ITEM_ID={$ITEM_ID}",
+        arguments = listOf(
+            navArgument(name = ITEM_ID) {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            },
+        ),
+    ) { a ->
+        println(a.arguments)
+        // TODO implement note screen
+    }
+
+
 
     composable(SIGN_IN_SCREEN) {
         SignInScreen(
             openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) },
-            accountService = AccountServiceImpl()
+            accountService = AccountServiceImpl(),
         )
     }
 
@@ -89,7 +100,7 @@ fun NavGraphBuilder.appGraph(appState: AppState) {
                     popUp = SIGN_UP_SCREEN,
                 )
             },
-            accountService = AccountServiceImpl()
+            accountService = AccountServiceImpl(),
         )
     }
 

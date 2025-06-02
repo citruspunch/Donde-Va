@@ -33,4 +33,7 @@
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="account_already_exists">Account already exists</string>
     <string name="password_must_be_at_least_six_characters_long">Password must be at least 6 characters long</string>
+    <string name="history">History</string>
+    <string name="scanned">Scanned</string>
+    <string name="analyze_another_object">Analyze another object</string>
 </resources>

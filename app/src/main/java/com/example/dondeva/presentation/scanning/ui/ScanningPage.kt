@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.ImageSearch
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,13 +41,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
+import com.example.dondeva.data.impl.AccountServiceImpl
+import com.example.dondeva.data.impl.StorageServiceImpl
+import com.example.dondeva.domain.entity.GarbageItem
+import com.example.dondeva.presentation.history.HistoryViewModel
 import com.example.dondeva.presentation.scanning.data.TfLiteGarbageClassifier
 import com.example.dondeva.presentation.scanning.domain.Classification
+import kotlinx.coroutines.launch
 
 @Composable
-fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
+fun ScanningPage(
+    onNavigateToLoginPage: () -> Unit,
+    onNavigateToHistoryView: () -> Unit,
+) {
     val context = LocalContext.current
+    val historyViewModel = viewModel {
+        val accountService = AccountServiceImpl()
+        HistoryViewModel(
+            accountService = accountService,
+            storageService = StorageServiceImpl(accountService),
+        )
+    }
     val classifier = remember {
         TfLiteGarbageClassifier(context.applicationContext)
     }
@@ -54,9 +72,15 @@ fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
             setEnabledUseCases(CameraController.IMAGE_CAPTURE)
         }
     }
+    val scope = rememberCoroutineScope()
 
-    var analyzeResult by remember { mutableStateOf<Classification?>(null) }
+    var savedGarbageItem by remember { mutableStateOf<GarbageItem?>(null) }
     var isAnalyzing by remember { mutableStateOf(false) }
+
+    fun saveResult(result: Classification) = scope.launch {
+        savedGarbageItem = historyViewModel.createNewHistoryEntry(result.type)
+        isAnalyzing = false
+    }
 
     fun analyzeImage() {
         isAnalyzing = true
@@ -66,9 +90,8 @@ fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
                 override fun onCaptureSuccess(image: ImageProxy) {
                     val bitmap = image.toBitmap().centerCrop(321, 321)
                     val result = classifier.classify(bitmap, image.imageInfo.rotationDegrees)
-                    result.firstOrNull()?.let { analyzeResult = it }
+                    result.firstOrNull()?.let { saveResult(it) }
                     image.close()
-                    isAnalyzing = false
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -79,9 +102,9 @@ fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
         )
     }
 
-    if (analyzeResult != null) ScanningResultAlertDialog(
-        garbageType = analyzeResult!!.type,
-        onDismissRequest = { analyzeResult = null },
+    if (savedGarbageItem != null) ScanningResultAlertDialog(
+        garbageType = savedGarbageItem!!.type,
+        onDismissRequest = { savedGarbageItem = null },
         onSeeDetails = { },
     )
 
@@ -92,9 +115,13 @@ fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
                     Text(text = stringResource(R.string.app_name))
                 },
                 actions = {
-                    IconButton(
-                        onClick = onNavigateToLoginPage,
-                    ) {
+                    IconButton(onClick = onNavigateToHistoryView) {
+                        Icon(
+                            Icons.Outlined.History,
+                            contentDescription = stringResource(R.string.history),
+                        )
+                    }
+                    IconButton(onClick = onNavigateToLoginPage) {
                         Icon(
                             Icons.AutoMirrored.Outlined.ExitToApp,
                             contentDescription = stringResource(R.string.sign_out),
@@ -104,17 +131,13 @@ fun ScanningPage(onNavigateToLoginPage: () -> Unit) {
             )
         },
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = innerPadding.calculateBottomPadding()),
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             CameraPreview(controller, Modifier.fillMaxSize())
             Button(
                 onClick = { if (isAnalyzing) Unit else analyzeImage() },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = 48.dp),
+                    .padding(bottom = 48.dp + innerPadding.calculateBottomPadding()),
                 contentPadding = PaddingValues(horizontal = 40.dp, vertical = 16.dp),
             ) {
                 if (isAnalyzing)
