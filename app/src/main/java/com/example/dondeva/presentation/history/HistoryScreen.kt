@@ -1,6 +1,11 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package com.example.dondeva.presentation.history
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,20 +47,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
-import com.example.dondeva.data.impl.AccountServiceImpl
-import com.example.dondeva.data.impl.StorageServiceImpl
 import com.example.dondeva.domain.entity.GarbageItem
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.domain.service.StorageService
-import com.example.dondeva.presentation.scanning.domain.GarbageType
-import com.example.dondeva.ui.theme.AppTheme
-import com.google.firebase.Timestamp
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.dondeva.presentation.utils.toLocaleFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +62,8 @@ fun HistoryScreen(
     openScreen: (String) -> Unit,
     accountService: AccountService,
     storageService: StorageService,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
 ) {
     val viewModel: HistoryViewModel = viewModel {
         HistoryViewModel(accountService, storageService)
@@ -179,9 +179,16 @@ fun HistoryScreen(
             contentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding() + 80.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(garbageItems, key = { it.id }) { garbageItem ->
+            items(
+                garbageItems.sortedByDescending { it.scanningTime },
+                key = { it.id },
+            ) { garbageItem ->
                 Box(modifier = Modifier.padding(horizontal = 16.dp)) {
-                    GarbageCard(garbageItem = garbageItem) {
+                    GarbageCard(
+                        garbageItem = garbageItem,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedContentScope = animatedContentScope,
+                    ) {
                         viewModel.onItemClick(openScreen, garbageItem)
                     }
                 }
@@ -193,11 +200,10 @@ fun HistoryScreen(
 @Composable
 fun GarbageCard(
     garbageItem: GarbageItem,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope,
     onActionClick: (String) -> Unit,
 ) {
-    fun formatTimestamp(timestamp: Timestamp) =
-        SimpleDateFormat("dd-MM-yyyy, HH:mm", Locale.getDefault()).format(timestamp.toDate())
-
     Card {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -213,41 +219,48 @@ fun GarbageCard(
                     style = MaterialTheme.typography.titleLarge,
                 )
                 Text(
-                    text = "${stringResource(R.string.scanned)}: ${formatTimestamp(garbageItem.scanningTime)}",
+                    text = "${stringResource(R.string.scanned)}: ${garbageItem.scanningTime.toLocaleFormat()}",
                     style = MaterialTheme.typography.labelLarge,
                 )
             }
-            Image(
-                painter = painterResource(garbageItem.type.icon),
-                contentDescription = "${stringResource(garbageItem.type.key)} icon",
-                modifier = Modifier.size(80.dp),
-            )
+            with(sharedTransitionScope) {
+                Image(
+                    painter = painterResource(garbageItem.type.icon),
+                    contentDescription = "${stringResource(garbageItem.type.key)} icon",
+                    modifier = Modifier
+                        .size(80.dp)
+                        .sharedElement(
+                            state = sharedTransitionScope.rememberSharedContentState(key = garbageItem.id),
+                            animatedVisibilityScope = animatedContentScope,
+                        ),
+                )
+            }
         }
     }
 }
 
-@Preview
-@Composable
-fun HistoryScreenPreview() = AppTheme {
-    val accountService = AccountServiceImpl()
-    val storage = StorageServiceImpl(accountService)
-
-    HistoryScreen(
-        restartApp = {},
-        openScreen = {},
-        accountService = accountService,
-        storageService = storage,
-    )
-}
-
-@Preview
-@Composable
-fun GarbageCardPreview() = AppTheme {
-    GarbageCard(
-        garbageItem = GarbageItem(
-            id = "my-key",
-            userId = "my-id",
-            type = GarbageType.GLASS,
-        ),
-    ) {}
-}
+//@Preview
+//@Composable
+//fun HistoryScreenPreview() = AppTheme {
+//    val accountService = AccountServiceImpl()
+//    val storage = StorageServiceImpl(accountService)
+//
+//    HistoryScreen(
+//        restartApp = {},
+//        openScreen = {},
+//        accountService = accountService,
+//        storageService = storage,
+//    )
+//}
+//
+//@Preview
+//@Composable
+//fun GarbageCardPreview() = AppTheme {
+//    GarbageCard(
+//        garbageItem = GarbageItem(
+//            id = "my-key",
+//            userId = "my-id",
+//            type = GarbageType.GLASS,
+//        ),
+//    ) {}
+//}

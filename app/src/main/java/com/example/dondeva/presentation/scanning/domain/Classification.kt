@@ -8,7 +8,7 @@ enum class GarbageType(val key: Int, val icon: Int) {
     METAL(key = R.string.metal, icon = R.drawable.wrench),
     PAPER(key = R.string.paper, icon = R.drawable.document),
     PLASTIC(key = R.string.plastic, icon = R.drawable.spray_bottle),
-    TRASH(key = R.string.trash, icon = R.drawable.trash_can),
+    MISCELLANEOUS(key = R.string.miscellaneous, icon = R.drawable.trash_can),
 }
 
 data class Classification(

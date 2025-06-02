@@ -11,7 +11,7 @@ data class GarbageItem(
     val scanningTime: Timestamp = Timestamp.now(),
 ) {
     // Used by Firestore to create new instances when reading
-    constructor() : this(id = "", userId = "", type = GarbageType.TRASH)
+    constructor() : this(id = "", userId = "", type = GarbageType.MISCELLANEOUS)
 }
 
 //fun GarbageItem.getShortLabel(maxLength: Int = 30): String =

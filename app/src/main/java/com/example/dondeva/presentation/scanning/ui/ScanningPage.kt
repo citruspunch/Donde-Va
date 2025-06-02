@@ -55,6 +55,7 @@ import kotlinx.coroutines.launch
 fun ScanningPage(
     onNavigateToLoginPage: () -> Unit,
     onNavigateToHistoryView: () -> Unit,
+    onNavigateToHistoryItemView: (itemId: String) -> Unit,
 ) {
     val context = LocalContext.current
     val historyViewModel = viewModel {
@@ -105,7 +106,7 @@ fun ScanningPage(
     if (savedGarbageItem != null) ScanningResultAlertDialog(
         garbageType = savedGarbageItem!!.type,
         onDismissRequest = { savedGarbageItem = null },
-        onSeeDetails = { },
+        onSeeDetails = { onNavigateToHistoryItemView(savedGarbageItem!!.id) },
     )
 
     Scaffold(
