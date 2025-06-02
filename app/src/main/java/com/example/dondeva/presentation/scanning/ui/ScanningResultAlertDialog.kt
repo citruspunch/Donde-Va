@@ -20,8 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.dondeva.R
 import com.example.dondeva.presentation.scanning.domain.GarbageType
-import java.util.Timer
-import kotlin.concurrent.schedule
+import kotlinx.coroutines.delay
 
 @Composable
 fun ScanningResultAlertDialog(
@@ -33,7 +32,8 @@ fun ScanningResultAlertDialog(
     val animatedScale: Float by animateFloatAsState(if (isExpanded) 1f else 0f, label = "scale")
 
     LaunchedEffect(Unit) {
-        Timer().schedule(delay = 250) { isExpanded = true }
+        delay(250)
+        isExpanded = true
     }
 
     AlertDialog(
