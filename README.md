@@ -30,10 +30,6 @@ The app's primary goal is to help users identify the type of waste (e.g., cardbo
    - **Purpose**: Manages navigation between screens.
    - **Features**: Ensures a structured and predictable navigation flow.
 
-### 6. **Kotlin Serialization**
-   - **Purpose**: Handles JSON serialization and deserialization.
-   - **Features**: Simplifies working with JSON data.
-
 ---
 
 ## Good Practices Followed
