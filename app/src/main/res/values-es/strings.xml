@@ -33,4 +33,11 @@
     <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
     <string name="account_already_exists">La cuenta ya existe</string>
     <string name="password_must_be_at_least_six_characters_long">La contraseña debe tener al menos 6 caracteres</string>
+    <string name="google_logo_description">Logo de Google</string>
+    <string name="no_accounts_error">No se encontraron cuentas de Google en este dispositivo</string>
+    <string name="unexpected_credential">Tipo de credencial inesperado</string>
+    <string name="get_credential_error">Error al obtener la credencial</string>
+    <string name="sign_in_with_google">Iniciar sesión con Google</string>
+    <string name="sign_up_with_google">Registrarse con Google</string>
+    <string name="or">o</string>
 </resources>

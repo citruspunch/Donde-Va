@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation.sing_in
+package com.example.dondeva.presentation.authentication.sing_in
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -51,6 +51,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.domain.service.AccountService
+import com.example.dondeva.presentation.authentication.AuthenticationButton
 import com.example.dondeva.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 
@@ -188,6 +189,13 @@ fun SignInScreen(
                     modifier = modifier.padding(vertical = 6.dp),
                 )
             }
+            Text(text = stringResource(R.string.or))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AuthenticationButton(R.string.sign_in_with_google) {
+                viewModel.handleGoogleSignInWithBottomSheet(context, openAndPopUp)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             Spacer(modifier = Modifier.height(8.dp))
             TextButton(
                 onClick = {

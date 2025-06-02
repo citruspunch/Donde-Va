@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation.sign_up
+package com.example.dondeva.presentation.authentication.sign_up
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -47,13 +47,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dondeva.R
 import com.example.dondeva.data.impl.AccountServiceImpl
 import com.example.dondeva.domain.service.AccountService
 import com.example.dondeva.ui.theme.AppTheme
 import kotlinx.coroutines.launch
-
+import com.example.dondeva.presentation.authentication.AuthenticationButton
 
 @Composable
 fun SignUpScreen(
@@ -88,6 +89,8 @@ fun SignUpScreen(
                 snackbarHostState.showSnackbar(message = context.resources.getString(message))
             }
         }
+
+
     }
 
     Scaffold(
@@ -227,9 +230,18 @@ fun SignUpScreen(
                 Text(
                     text = if (isSigningUp.value) "${stringResource(R.string.signing_up)}..."
                     else stringResource(R.string.sign_up),
+                    fontSize = 15.sp,
+                    modifier = Modifier.padding(0.dp, 6.dp)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
+            Text(text = stringResource(R.string.or))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AuthenticationButton(R.string.sign_up_with_google) {
+                viewModel.handleGoogleSignUpWithBottomSheet(context, openAndPopUp)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
             TextButton(onClick = onSignInRequired) {
                 Text(text = stringResource(R.string.account_already_created))
             }
