@@ -11,7 +11,6 @@ const val SPLASH_SCREEN = "SplashScreen"
 
 // Argumentos
 const val ITEM_ID = "itemId"
-const val ITEM_ID_ARG = "?$ITEM_ID={$ITEM_ID}"
 const val ITEM_DEFAULT_ID = "-1"
 
 const val LOCALHOST = "10.0.2.2"
