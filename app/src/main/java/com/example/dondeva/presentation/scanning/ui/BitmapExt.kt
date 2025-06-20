@@ -1,4 +1,4 @@
-package com.example.dondeva.presentation
+package com.example.dondeva.presentation.scanning.ui
 
 import android.graphics.Bitmap
 
